@@ -2228,7 +2228,7 @@ void CreateBoxMon(struct BoxPokemon *boxMon, u16 species, u8 level, u8 fixedIV, 
             // Choose random OT IDs until one that results in a non-shiny Pokémon
             value = Random32();
             shinyValue = GET_SHINY_VALUE(value, personality);
-        } while (shinyValue < SHINY_ODDS);
+        } while (shinyValue < 8192);
     }
     else if (otIdType == OT_ID_PRESET)
     {
@@ -6519,7 +6519,7 @@ const u32 *GetMonSpritePalFromSpeciesAndPersonality(u16 species, u32 otId, u32 p
         return gMonPaletteTable[SPECIES_NONE].data;
 
     shinyValue = GET_SHINY_VALUE(otId, personality);
-    if (shinyValue < SHINY_ODDS)
+    if (shinyValue < 8192)
         return gMonShinyPaletteTable[species].data;
     else
         return gMonPaletteTable[species].data;
