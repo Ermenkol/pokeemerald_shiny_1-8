@@ -6712,11 +6712,11 @@ bool8 IsMonShiny(struct Pokemon *mon)
 
 bool8 IsShinyOtIdPersonality(u32 otId, u32 personality)
 {
-    bool8 retVal = FALSE;
     u32 shinyValue = GET_SHINY_VALUE(otId, personality);
-    if (shinyValue < SHINY_ODDS)
-        retVal = TRUE;
-    return retVal;
+    if (shinyValue < 8192)
+        return TRUE;
+    else
+        return FALSE;
 }
 
 const u8 *GetTrainerPartnerName(void)
