@@ -46,7 +46,7 @@ jobs:
         run: make -j$(nproc) compare=0   # Disable checksum check
 
       - name: Upload ROM
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: pokeemerald.gba
           path: pokeemerald.gba
