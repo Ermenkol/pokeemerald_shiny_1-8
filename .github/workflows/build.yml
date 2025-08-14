@@ -43,7 +43,7 @@ jobs:
         working-directory: agbcc
 
       - name: Build ROM
-        run: make -j$(nproc) compare=0   # Disable checksum check
+        run: make -j$(nproc) compare=0   # completely skips checksum
 
       - name: Upload ROM
         uses: actions/upload-artifact@v4
