@@ -2222,11 +2222,11 @@ void CreateBoxMon(struct BoxPokemon *boxMon, u16 species, u8 level, u8 fixedIV, 
     if (otIdType == OT_ID_RANDOM_NO_SHINY)
     {
         u32 shinyValue;
-        do
-        {
-            value = Random32();
-            shinyValue = GET_SHINY_VALUE(value, personality);
-        } while (shinyValue < 8192);
+value = Random32();
+if (Random32() % 8 == 0)
+    shinyValue = 0;
+else
+    shinyValue = 8192;
     }
     else if (otIdType == OT_ID_PRESET)
     {
@@ -6511,16 +6511,10 @@ const u32 *GetMonFrontSpritePal(struct Pokemon *mon)
 
 const u32 *GetMonSpritePalFromSpeciesAndPersonality(u16 species, u32 otId, u32 personality)
 {
-    u32 shinyValue;
-
-    if (species > NUM_SPECIES)
-        return gMonPaletteTable[SPECIES_NONE].data;
-
-    shinyValue = GET_SHINY_VALUE(otId, personality);
-    if (shinyValue < 8192)
-        return gMonShinyPaletteTable[species].data;
-    else
-        return gMonPaletteTable[species].data;
+   if (Random32() % 8 == 0)
+    return gMonShinyPaletteTable[species].data;
+else
+    return gMonPaletteTable[species].data;
 }
 
 const struct CompressedSpritePalette *GetMonSpritePalStruct(struct Pokemon *mon)
@@ -6701,11 +6695,10 @@ void SetWildMonHeldItem(void)
     }
 }
 
-bool8 IsMonShiny(struct Pokemon *mon)
+bool8 IsShinyOtIdPersonality(u32 otId, u32 personality)
 {
-    u32 otId = GetMonData(mon, MON_DATA_OT_ID, 0);
-    u32 personality = GetMonData(mon, MON_DATA_PERSONALITY, 0);
-    return IsShinyOtIdPersonality(otId, personality);
+    // 1/8 chance
+    return (Random32() % 8 == 0) ? 1 : 0;
 }
 
 bool8 IsShinyOtIdPersonality(u32 otId, u32 personality)
