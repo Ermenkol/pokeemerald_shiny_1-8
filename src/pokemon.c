@@ -2219,13 +2219,11 @@ void CreateBoxMon(struct BoxPokemon *boxMon, u16 species, u8 level, u8 fixedIV, 
 
     SetBoxMonData(boxMon, MON_DATA_PERSONALITY, &personality);
 
-    // Determine original trainer ID
     if (otIdType == OT_ID_RANDOM_NO_SHINY)
     {
         u32 shinyValue;
         do
         {
-            // Choose random OT IDs until one that results in a non-shiny Pokémon
             value = Random32();
             shinyValue = GET_SHINY_VALUE(value, personality);
         } while (shinyValue < 8192);
@@ -2234,7 +2232,7 @@ void CreateBoxMon(struct BoxPokemon *boxMon, u16 species, u8 level, u8 fixedIV, 
     {
         value = fixedOtId;
     }
-    else // Player is the OT
+    else
     {
         value = gSaveBlock2Ptr->playerTrainerId[0]
               | (gSaveBlock2Ptr->playerTrainerId[1] << 8)
