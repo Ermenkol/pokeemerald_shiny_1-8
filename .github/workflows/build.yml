@@ -1,4 +1,4 @@
-name: Build ROM
+name: CI
 
 on:
   push:
@@ -8,19 +8,45 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    env:
+      GAME_VERSION: EMERALD
+      GAME_REVISION: 0
+      GAME_LANGUAGE: ENGLISH
+      MODERN: 0
+      COMPARE: 0   # Disable checksum compare
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
 
-    - name: Install dependencies
-      run: sudo apt-get update && sudo apt-get install -y gcc-arm-none-eabi binutils-arm-none-eabi libpng-dev make git
+      - name: Checkout syms
+        if: ${{ github.event_name == 'push' }}
+        uses: actions/checkout@v3
+        with:
+          path: symbols
+          ref: symbols
 
-    - name: Build
-      run: make -j$(nproc) EMERALD=1
+      - name: Checkout agbcc
+        uses: actions/checkout@v3
+        with:
+          path: agbcc
+          repository: pret/agbcc
 
-    - name: Upload ROM
-      uses: actions/upload-artifact@v3
-      with:
-        name: pokeemerald-rom
-        path: pokeemerald.gba
+      - name: Install binutils
+        run: |
+          sudo apt update
+          sudo apt install gcc-arm-none-eabi binutils-arm-none-eabi libpng-dev
+
+      - name: Install agbcc
+        run: |
+          ./build.sh
+          ./install.sh ../
+        working-directory: agbcc
+
+      - name: Build ROM
+        run: make -j$(nproc) compare=0   # Disable checksum check
+
+      - name: Upload ROM
+        uses: actions/upload-artifact@v3
+        with:
+          name: pokeemerald.gba
+          path: pokeemerald.gba
